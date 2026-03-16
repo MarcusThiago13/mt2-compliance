@@ -1,14 +1,19 @@
-/* Main App Component - Handles routing (using react-router-dom), query client and other providers - use this file to add all routes */
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import Layout from './components/Layout'
 import Index from './pages/Index'
 import NotFound from './pages/NotFound'
-import Layout from './components/Layout'
 
-// ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
-// AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
+// Modules
+import ContextoPage from './pages/modules/ContextoPage'
+import LiderancaPage from './pages/modules/LiderancaPage'
+import PlanejamentoPage from './pages/modules/PlanejamentoPage'
+import ApoioPage from './pages/modules/ApoioPage'
+import OperacaoPage from './pages/modules/OperacaoPage'
+import AvaliacaoPage from './pages/modules/AvaliacaoPage'
+import MelhoriaPage from './pages/modules/MelhoriaPage'
 
 const App = () => (
   <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
@@ -18,7 +23,13 @@ const App = () => (
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES MUST BE ADDED HERE */}
+          <Route path="/modulo/4" element={<ContextoPage />} />
+          <Route path="/modulo/5" element={<LiderancaPage />} />
+          <Route path="/modulo/6" element={<PlanejamentoPage />} />
+          <Route path="/modulo/7" element={<ApoioPage />} />
+          <Route path="/modulo/8" element={<OperacaoPage />} />
+          <Route path="/modulo/9" element={<AvaliacaoPage />} />
+          <Route path="/modulo/10" element={<MelhoriaPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
