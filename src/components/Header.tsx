@@ -8,6 +8,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Badge } from '@/components/ui/badge'
@@ -23,7 +26,7 @@ export function Header() {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Buscar riscos, documentos, políticas..."
+              placeholder="Buscar no mt3 compliance..."
               className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px] bg-muted/50 focus-visible:bg-background"
             />
           </div>
@@ -45,17 +48,17 @@ export function Header() {
             <DropdownMenuItem className="flex flex-col items-start gap-1 p-3 cursor-pointer">
               <span className="font-medium text-sm">Renovação Alvará Expirada</span>
               <span className="text-xs text-muted-foreground">
-                Obrigação Módulo 4.2 venceu ontem.
+                Obrigação Módulo 4.5 venceu ontem.
               </span>
             </DropdownMenuItem>
             <DropdownMenuItem className="flex flex-col items-start gap-1 p-3 cursor-pointer">
               <span className="font-medium text-sm">Treinamento Pendente</span>
               <span className="text-xs text-muted-foreground">
-                3 colaboradores não concluíram LGPD.
+                3 colaboradores não concluíram LGPD (Módulo 7).
               </span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-center w-full justify-center text-primary text-sm">
+            <DropdownMenuItem className="text-center w-full justify-center text-primary text-sm cursor-pointer">
               Ver todas as notificações
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -71,10 +74,21 @@ export function Header() {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Meu Perfil</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Configurações</DropdownMenuItem>
-            <DropdownMenuItem>Alternar Papel (Admin/User)</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">Configurações</DropdownMenuItem>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger className="cursor-pointer">
+                Alternar Papel (RBAC)
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem className="cursor-pointer">Administrador</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">Gestor de Compliance</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">Gerente / Diretor</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">Colaborador</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">Auditor</DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Sair</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer text-destructive">Sair</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

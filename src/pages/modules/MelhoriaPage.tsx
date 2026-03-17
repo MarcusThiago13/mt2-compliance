@@ -9,66 +9,92 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
+import { MOCK_NCS } from '@/lib/mock'
+import { CheckSquare } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export default function MelhoriaPage() {
+  const handleExport = (format: string) => {
+    console.log(`Exportando Melhoria em ${format}`)
+  }
+
   return (
     <div className="space-y-6">
       <PageHeader
-        title="10. Melhoria"
-        description="Não conformidades, ações corretivas e melhoria contínua."
+        title="10. Melhoria Contínua"
+        description="Não conformidades, ações corretivas e verificação de eficácia (mt3 compliance)."
         breadcrumbs={[{ label: 'Início', path: '/' }, { label: 'ISO Módulo 10' }]}
+        onExport={handleExport}
       />
 
       <Card>
-        <CardHeader>
-          <CardTitle>Tratamento de Não-Conformidades (10.1)</CardTitle>
-          <CardDescription>
-            Acompanhamento de NCs abertas em auditorias ou denúncias confirmadas.
-          </CardDescription>
+        <CardHeader className="flex flex-row items-start justify-between">
+          <div>
+            <CardTitle>Tratamento de Não Conformidades (10.2)</CardTitle>
+            <CardDescription>
+              Workflow estruturado exigindo verificação de eficácia antes do fechamento.
+            </CardDescription>
+          </div>
+          <Button size="sm">Registrar NC</Button>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0 overflow-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Código</TableHead>
-                <TableHead>Descrição Sumária</TableHead>
+                <TableHead>Código / Descrição</TableHead>
+                <TableHead>Classificação</TableHead>
                 <TableHead>Origem</TableHead>
                 <TableHead>Fase Atual</TableHead>
-                <TableHead>Prazo Eficácia</TableHead>
+                <TableHead>Verificação de Eficácia</TableHead>
+                <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell className="font-medium">NC-2024-01</TableCell>
-                <TableCell>Falha em due diligence de terceiro estratégico.</TableCell>
-                <TableCell>Auditoria Interna</TableCell>
-                <TableCell>
-                  <Badge className="bg-warning hover:bg-warning/80">Plano de Ação</Badge>
-                </TableCell>
-                <TableCell>15/01/2025</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">NC-2024-02</TableCell>
-                <TableCell>Assinatura faltante em política vigente.</TableCell>
-                <TableCell>Monitoramento</TableCell>
-                <TableCell>
-                  <Badge variant="outline" className="text-primary border-primary">
-                    Análise de Causa Raiz
-                  </Badge>
-                </TableCell>
-                <TableCell>30/11/2024</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">NC-2023-14</TableCell>
-                <TableCell>Pagamento não justificado via caixa pequeno.</TableCell>
-                <TableCell>Canal de Denúncia</TableCell>
-                <TableCell>
-                  <Badge className="bg-success hover:bg-success/80">
-                    Eficácia Comprovada (Fechada)
-                  </Badge>
-                </TableCell>
-                <TableCell>-</TableCell>
-              </TableRow>
+              {MOCK_NCS.map((nc) => (
+                <TableRow key={nc.id}>
+                  <TableCell>
+                    <div className="font-medium">{nc.id}</div>
+                    <div className="text-xs text-muted-foreground">{nc.desc}</div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="outline"
+                      className={
+                        nc.type.includes('Não Compliance')
+                          ? 'text-destructive border-destructive bg-destructive/5'
+                          : 'text-warning border-warning bg-warning/5'
+                      }
+                    >
+                      {nc.type}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-xs">{nc.origin}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="secondary"
+                      className={nc.phase === 'Fechada' ? 'bg-success/20 text-success' : ''}
+                    >
+                      {nc.phase}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2 text-xs font-medium">
+                      {nc.effectiveness === 'Eficácia Comprovada' ? (
+                        <span className="text-success flex items-center">
+                          <CheckSquare className="w-3 h-3 mr-1" /> {nc.effectiveness}
+                        </span>
+                      ) : (
+                        <span className="text-warning">{nc.effectiveness}</span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="sm" className="text-primary">
+                      Tratar
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </CardContent>

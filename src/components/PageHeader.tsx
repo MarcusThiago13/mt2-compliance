@@ -1,12 +1,18 @@
-import { Download, ChevronRight } from 'lucide-react'
+import { Download, ChevronRight, FileText, Table as TableIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 interface PageHeaderProps {
   title: string
   description?: string
   breadcrumbs: { label: string; path?: string }[]
-  onExport?: () => void
+  onExport?: (format: 'pdf' | 'excel' | 'csv') => void
 }
 
 export function PageHeader({ title, description, breadcrumbs, onExport }: PageHeaderProps) {
@@ -31,10 +37,25 @@ export function PageHeader({ title, description, breadcrumbs, onExport }: PageHe
         {description && <p className="text-muted-foreground mt-1">{description}</p>}
       </div>
       {onExport && (
-        <Button variant="outline" onClick={onExport} className="shrink-0 shadow-sm">
-          <Download className="w-4 h-4 mr-2" />
-          Exportar Relatório
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="shrink-0 shadow-sm">
+              <Download className="w-4 h-4 mr-2" />
+              Exportar Relatório
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => onExport('pdf')} className="cursor-pointer">
+              <FileText className="w-4 h-4 mr-2" /> Exportar em PDF
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onExport('excel')} className="cursor-pointer">
+              <TableIcon className="w-4 h-4 mr-2" /> Exportar em Excel (.xlsx)
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onExport('csv')} className="cursor-pointer">
+              <TableIcon className="w-4 h-4 mr-2" /> Exportar em CSV
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       )}
     </div>
   )
