@@ -1,4 +1,5 @@
-import { Bell, Search, User } from 'lucide-react'
+import { Bell, Search, User, LogOut, ArrowLeftRight } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,26 +9,59 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Badge } from '@/components/ui/badge'
+import useAuthStore from '@/stores/useAuthStore'
+import { MOCK_TENANTS } from '@/lib/mock'
 
 export function Header() {
+  const { user, currentTenantId, setTenant, logout } = useAuthStore()
+  const navigate = useNavigate()
+
+  const currentTenant = MOCK_TENANTS.find((t) => t.id === currentTenantId)
+  const isSuperAdmin = user?.role === 'SUPER_ADMIN'
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
+
+  const handleSwitchTenant = () => {
+    setTenant(null)
+    navigate('/admin')
+  }
+
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-4 border-b bg-background/95 px-4 md:px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
       <SidebarTrigger className="md:hidden" />
 
-      <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-        <form className="ml-auto flex-1 sm:flex-initial">
+      <div className="hidden md:flex flex-col">
+        <span className="text-sm font-semibold text-primary">{currentTenant?.name}</span>
+        <span className="text-[10px] text-muted-foreground uppercase tracking-wider bg-muted px-1.5 py-0.5 rounded w-fit">
+          Ambiente Isolado
+        </span>
+      </div>
+
+      <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 justify-end">
+        {isSuperAdmin && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleSwitchTenant}
+            className="hidden sm:flex"
+          >
+            <ArrowLeftRight className="w-4 h-4 mr-2" /> Trocar Cliente
+          </Button>
+        )}
+
+        <form className="hidden sm:flex flex-1 sm:flex-initial">
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Buscar no mt3 compliance..."
-              className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px] bg-muted/50 focus-visible:bg-background"
+              placeholder="Buscar no compliance..."
+              className="pl-8 sm:w-[200px] lg:w-[300px] bg-muted/50 focus-visible:bg-background h-9"
             />
           </div>
         </form>
@@ -43,52 +77,51 @@ export function Header() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-80">
-            <DropdownMenuLabel>Alertas de Compliance</DropdownMenuLabel>
+            <DropdownMenuLabel>Alertas do {currentTenant?.name}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="flex flex-col items-start gap-1 p-3 cursor-pointer">
-              <span className="font-medium text-sm">Renovação Alvará Expirada</span>
-              <span className="text-xs text-muted-foreground">
-                Obrigação Módulo 4.5 venceu ontem.
-              </span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="flex flex-col items-start gap-1 p-3 cursor-pointer">
-              <span className="font-medium text-sm">Treinamento Pendente</span>
-              <span className="text-xs text-muted-foreground">
-                3 colaboradores não concluíram LGPD (Módulo 7).
-              </span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-center w-full justify-center text-primary text-sm cursor-pointer">
-              Ver todas as notificações
+              <span className="font-medium text-sm">Ação Pendente</span>
+              <span className="text-xs text-muted-foreground">Verifique o módulo de riscos.</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full border shadow-sm">
-              <User className="h-5 w-5" />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full border shadow-sm bg-primary/5"
+            >
+              <User className="h-5 w-5 text-primary" />
               <span className="sr-only">Menu do Usuário</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Meu Perfil</DropdownMenuLabel>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">{user?.name}</p>
+                <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                <Badge variant="secondary" className="mt-2 w-fit text-[10px]">
+                  {user?.role}
+                </Badge>
+              </div>
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer">Configurações</DropdownMenuItem>
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger className="cursor-pointer">
-                Alternar Papel (RBAC)
-              </DropdownMenuSubTrigger>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem className="cursor-pointer">Administrador</DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">Gestor de Compliance</DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">Gerente / Diretor</DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">Colaborador</DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">Auditor</DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer text-destructive">Sair</DropdownMenuItem>
+            {isSuperAdmin && (
+              <>
+                <DropdownMenuItem onClick={handleSwitchTenant} className="cursor-pointer sm:hidden">
+                  <ArrowLeftRight className="w-4 h-4 mr-2" /> Painel Super Admin
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="sm:hidden" />
+              </>
+            )}
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive"
+            >
+              <LogOut className="w-4 h-4 mr-2" /> Sair
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

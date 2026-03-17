@@ -2,7 +2,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { AuthProvider } from './stores/useAuthStore'
 import Layout from './components/Layout'
+import Login from './pages/Login'
+import SuperAdminDashboard from './pages/SuperAdminDashboard'
 import Index from './pages/Index'
 import NotFound from './pages/NotFound'
 
@@ -19,28 +22,32 @@ import AvaliacaoPage from './pages/modules/AvaliacaoPage'
 import MelhoriaPage from './pages/modules/MelhoriaPage'
 
 const App = () => (
-  <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<Index />} />
-          <Route path="/modulo/1" element={<DadosOrganizacaoPage />} />
-          <Route path="/modulo/2" element={<OrgaoDiretivoPage />} />
-          <Route path="/modulo/3" element={<FuncaoCompliancePage />} />
-          <Route path="/modulo/4" element={<ContextoPage />} />
-          <Route path="/modulo/5" element={<LiderancaPage />} />
-          <Route path="/modulo/6" element={<PlanejamentoPage />} />
-          <Route path="/modulo/7" element={<ApoioPage />} />
-          <Route path="/modulo/8" element={<OperacaoPage />} />
-          <Route path="/modulo/9" element={<AvaliacaoPage />} />
-          <Route path="/modulo/10" element={<MelhoriaPage />} />
-        </Route>
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </TooltipProvider>
-  </BrowserRouter>
+  <AuthProvider>
+    <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin" element={<SuperAdminDashboard />} />
+          <Route element={<Layout />}>
+            <Route path="/" element={<Index />} />
+            <Route path="/modulo/1" element={<DadosOrganizacaoPage />} />
+            <Route path="/modulo/2" element={<OrgaoDiretivoPage />} />
+            <Route path="/modulo/3" element={<FuncaoCompliancePage />} />
+            <Route path="/modulo/4" element={<ContextoPage />} />
+            <Route path="/modulo/5" element={<LiderancaPage />} />
+            <Route path="/modulo/6" element={<PlanejamentoPage />} />
+            <Route path="/modulo/7" element={<ApoioPage />} />
+            <Route path="/modulo/8" element={<OperacaoPage />} />
+            <Route path="/modulo/9" element={<AvaliacaoPage />} />
+            <Route path="/modulo/10" element={<MelhoriaPage />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </TooltipProvider>
+    </BrowserRouter>
+  </AuthProvider>
 )
 
 export default App

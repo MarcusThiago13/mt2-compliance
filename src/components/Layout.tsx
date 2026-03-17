@@ -1,9 +1,25 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, Navigate, useLocation } from 'react-router-dom'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from './AppSidebar'
 import { Header } from './Header'
+import useAuthStore from '@/stores/useAuthStore'
 
 export default function Layout() {
+  const { user, currentTenantId } = useAuthStore()
+  const location = useLocation()
+
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />
+  }
+
+  if (user.role === 'SUPER_ADMIN' && !currentTenantId) {
+    return <Navigate to="/admin" replace />
+  }
+
+  if (!currentTenantId) {
+    return <Navigate to="/login" replace />
+  }
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-background font-sans text-foreground selection:bg-primary selection:text-primary-foreground">

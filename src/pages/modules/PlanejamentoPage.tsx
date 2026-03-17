@@ -8,15 +8,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { MOCK_ACTION_PLANS } from '@/lib/mock'
 import { Badge } from '@/components/ui/badge'
+import useAuthStore from '@/stores/useAuthStore'
+import { MOCK_ACTION_PLANS } from '@/lib/mock'
 
 export default function PlanejamentoPage() {
+  const { currentTenantId } = useAuthStore()
+  const plans = MOCK_ACTION_PLANS.filter((p) => p.tenantId === currentTenantId)
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="6. Planejamento"
-        description="Ações para abordar riscos, oportunidades e objetivos de compliance."
         breadcrumbs={[{ label: 'Início', path: '/' }, { label: 'ISO Módulo 6' }]}
       />
 
@@ -28,7 +31,6 @@ export default function PlanejamentoPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID</TableHead>
                 <TableHead>Tarefa</TableHead>
                 <TableHead>Responsável</TableHead>
                 <TableHead>Prazo</TableHead>
@@ -36,22 +38,15 @@ export default function PlanejamentoPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {MOCK_ACTION_PLANS.map((plan) => (
+              {plans.map((plan) => (
                 <TableRow key={plan.id}>
-                  <TableCell className="font-medium">{plan.id}</TableCell>
                   <TableCell>{plan.task}</TableCell>
                   <TableCell>{plan.owner}</TableCell>
                   <TableCell>{plan.deadline}</TableCell>
                   <TableCell>
                     <Badge
                       variant="secondary"
-                      className={
-                        plan.status === 'Concluído'
-                          ? 'bg-success/20 text-success'
-                          : plan.status === 'Atrasado'
-                            ? 'bg-destructive/20 text-destructive'
-                            : ''
-                      }
+                      className={plan.status === 'Concluído' ? 'bg-success/20 text-success' : ''}
                     >
                       {plan.status}
                     </Badge>

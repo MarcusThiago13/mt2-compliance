@@ -2,17 +2,18 @@ import { AlertTriangle, CheckCircle, ShieldAlert, BookOpen, ChevronRight } from 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Link } from 'react-router-dom'
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
+import { ChartContainer } from '@/components/ui/chart'
 import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from 'recharts'
 import { Badge } from '@/components/ui/badge'
-import { MOCK_NOTIFICATIONS } from '@/lib/mock'
+import useAuthStore from '@/stores/useAuthStore'
+import { MOCK_NOTIFICATIONS, MOCK_NCS, MOCK_RISKS } from '@/lib/mock'
 
 const maturityData = [{ name: 'Maturidade', value: 78, fill: 'var(--color-primary)' }]
 const chartConfig = { primary: { label: 'Compliance', color: 'hsl(var(--primary))' } }
 
 const isoModules = [
   { id: 1, name: 'Dados da Organização', progress: 100 },
-  { id: 2, name: 'Órgão Diretivo / Alta Direção', progress: 100 },
+  { id: 2, name: 'Órgão Diretivo', progress: 100 },
   { id: 3, name: 'Função de Compliance', progress: 85 },
   { id: 4, name: 'Contexto da Organização', progress: 100 },
   { id: 5, name: 'Liderança', progress: 85 },
@@ -24,15 +25,19 @@ const isoModules = [
 ]
 
 export default function Index() {
+  const { currentTenantId } = useAuthStore()
+
+  const tenantNotifs = MOCK_NOTIFICATIONS.filter((n) => n.tenantId === currentTenantId)
+  const tenantRisks = MOCK_RISKS.filter(
+    (r) => r.tenantId === currentTenantId && r.status === 'Crítico',
+  )
+  const tenantNCs = MOCK_NCS.filter((n) => n.tenantId === currentTenantId)
+
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-primary">Dashboard Executivo</h1>
-          <p className="text-muted-foreground">
-            Visão geral do programa mt3 compliance (ISO 37301).
-          </p>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight text-primary">Dashboard Executivo</h1>
+        <p className="text-muted-foreground">Visão geral do programa mt3 compliance.</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -42,8 +47,8 @@ export default function Index() {
             <ShieldAlert className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3</div>
-            <p className="text-xs text-muted-foreground mt-1">+1 desde o último mês</p>
+            <div className="text-2xl font-bold">{tenantRisks.length}</div>
+            <p className="text-xs text-muted-foreground mt-1">Neste ambiente</p>
           </CardContent>
         </Card>
         <Card className="shadow-sm border-l-4 border-l-warning">
@@ -52,7 +57,7 @@ export default function Index() {
             <AlertTriangle className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">5</div>
+            <div className="text-2xl font-bold">2</div>
             <p className="text-xs text-muted-foreground mt-1">Nos próximos 30 dias</p>
           </CardContent>
         </Card>
@@ -62,8 +67,8 @@ export default function Index() {
             <CheckCircle className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground mt-1">4 em tratamento (Mód. 10)</p>
+            <div className="text-2xl font-bold">{tenantNCs.length}</div>
+            <p className="text-xs text-muted-foreground mt-1">Em tratamento</p>
           </CardContent>
         </Card>
         <Card className="shadow-sm border-l-4 border-l-secondary">
@@ -114,54 +119,38 @@ export default function Index() {
                     >
                       78%
                     </text>
-                    <text
-                      x="50%"
-                      y="55%"
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      className="text-sm fill-muted-foreground"
-                    >
-                      Conformidade
-                    </text>
                   </RadialBarChart>
                 </ResponsiveContainer>
               </ChartContainer>
             </div>
-            <p className="text-sm text-center text-muted-foreground mt-4">Meta para o ano: 85%</p>
           </CardContent>
         </Card>
 
         <Card className="col-span-1 lg:col-span-3 shadow-sm">
           <CardHeader>
             <CardTitle>Mapa de Calor de Riscos</CardTitle>
-            <CardDescription>Impacto vs Probabilidade (Acesso Rápido Mód. 4.6)</CardDescription>
+            <CardDescription>Impacto vs Probabilidade (Mód. 4.6)</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-5 gap-1 aspect-square max-w-[300px] mx-auto p-4 border rounded-lg bg-muted/10 relative">
-              <span className="absolute -left-6 top-1/2 -rotate-90 text-xs font-semibold text-muted-foreground">
-                Probabilidade
-              </span>
-              <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-semibold text-muted-foreground">
-                Impacto
-              </span>
+            <div className="grid grid-cols-5 gap-1 aspect-square max-w-[300px] mx-auto p-4 border rounded-lg bg-muted/10">
               {Array.from({ length: 25 }).map((_, i) => {
                 const x = (i % 5) + 1
                 const y = 5 - Math.floor(i / 5)
                 const score = x * y
-                let bg = 'bg-success/20'
-                if (score > 6) bg = 'bg-warning/40'
-                if (score > 12) bg = 'bg-destructive/60'
-                if (score > 19) bg = 'bg-destructive/90'
-
+                let bg =
+                  score > 19
+                    ? 'bg-destructive/90'
+                    : score > 12
+                      ? 'bg-destructive/60'
+                      : score > 6
+                        ? 'bg-warning/40'
+                        : 'bg-success/20'
                 return (
                   <Link
                     to="/modulo/4"
                     key={i}
-                    className={`w-full h-full rounded-sm border border-background/50 hover:scale-105 hover:shadow-md transition-all cursor-pointer flex items-center justify-center ${bg}`}
-                  >
-                    {score === 20 && <span className="text-[10px] font-bold text-white">2</span>}
-                    {score === 15 && <span className="text-[10px] font-bold text-white">1</span>}
-                  </Link>
+                    className={`w-full h-full rounded-sm border border-background/50 hover:scale-105 transition-all cursor-pointer ${bg}`}
+                  />
                 )
               })}
             </div>
@@ -174,52 +163,50 @@ export default function Index() {
           </CardHeader>
           <CardContent className="p-0 flex-1 overflow-auto">
             <div className="divide-y">
-              {MOCK_NOTIFICATIONS.map((notif) => (
-                <div
-                  key={notif.id}
-                  className="p-4 hover:bg-muted/50 transition-colors flex items-start gap-3"
-                >
+              {tenantNotifs.length === 0 ? (
+                <div className="p-4 text-center text-sm text-muted-foreground">Nenhum alerta.</div>
+              ) : (
+                tenantNotifs.map((notif) => (
                   <div
-                    className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${notif.read ? 'bg-muted' : 'bg-primary'}`}
-                  />
-                  <div className="flex-1">
-                    <p
-                      className={`text-sm ${notif.read ? 'text-muted-foreground' : 'font-medium text-foreground'}`}
-                    >
-                      {notif.title}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">{notif.time}</p>
+                    key={notif.id}
+                    className="p-4 hover:bg-muted/50 transition-colors flex items-start gap-3"
+                  >
+                    <div
+                      className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${notif.read ? 'bg-muted' : 'bg-primary'}`}
+                    />
+                    <div className="flex-1">
+                      <p
+                        className={`text-sm ${notif.read ? 'text-muted-foreground' : 'font-medium text-foreground'}`}
+                      >
+                        {notif.title}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">{notif.time}</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
                   </div>
-                  <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </CardContent>
         </Card>
       </div>
 
       <h2 className="text-xl font-semibold tracking-tight mt-8 mb-4">Progresso dos Módulos</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {isoModules.map((mod) => (
           <Link key={mod.id} to={`/modulo/${mod.id}`}>
             <Card className="hover:border-primary/50 transition-colors cursor-pointer group h-full shadow-sm">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold group-hover:text-primary transition-colors flex items-center justify-between">
+                <CardTitle className="text-sm font-semibold flex justify-between">
                   Módulo {mod.id}
                   <Badge
                     variant={mod.progress === 100 ? 'default' : 'secondary'}
-                    className={
-                      mod.progress === 100
-                        ? 'bg-success hover:bg-success/80 text-[10px]'
-                        : 'text-[10px]'
-                    }
+                    className="text-[10px]"
                   >
                     {mod.progress}%
                   </Badge>
                 </CardTitle>
-                <CardDescription className="line-clamp-2 text-xs font-medium text-foreground mt-1">
-                  {mod.name}
-                </CardDescription>
+                <CardDescription className="line-clamp-2 text-xs mt-1">{mod.name}</CardDescription>
               </CardHeader>
               <CardContent>
                 <Progress value={mod.progress} className="h-1.5" />

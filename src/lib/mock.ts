@@ -1,60 +1,95 @@
+export const MOCK_TENANTS = [
+  { id: 'T-001', name: 'Empresa Alpha S.A.', cnpj: '11.111.111/0001-11', sector: 'Tecnologia' },
+  { id: 'T-002', name: 'Beta Solutions Ltda.', cnpj: '22.222.222/0001-22', sector: 'Saúde' },
+]
+
+export const MOCK_USERS = [
+  {
+    id: 'u1',
+    name: 'Admin Plataforma',
+    email: 'admin@mt3.com',
+    password: '123',
+    role: 'SUPER_ADMIN',
+  },
+  {
+    id: 'u2',
+    name: 'Gestor Alpha',
+    email: 'editor@alpha.com',
+    password: '123',
+    role: 'EDITOR',
+    tenantId: 'T-001',
+  },
+  {
+    id: 'u3',
+    name: 'Auditor Alpha',
+    email: 'viewer@alpha.com',
+    password: '123',
+    role: 'VIEWER',
+    tenantId: 'T-001',
+  },
+  {
+    id: 'u4',
+    name: 'Gestor Beta',
+    email: 'editor@beta.com',
+    password: '123',
+    role: 'EDITOR',
+    tenantId: 'T-002',
+  },
+]
+
 export const MOCK_NOTIFICATIONS = [
-  { id: 1, title: 'Nova política publicada', time: 'Há 2 horas', read: false },
-  { id: 2, title: 'Treinamento pendente: LGPD', time: 'Há 1 dia', read: false },
-  { id: 3, title: 'Risco crítico atualizado', time: 'Há 2 dias', read: true },
+  { id: 1, tenantId: 'T-001', title: 'Nova política publicada', time: 'Há 2 horas', read: false },
+  { id: 2, tenantId: 'T-001', title: 'Treinamento pendente: LGPD', time: 'Há 1 dia', read: false },
+  { id: 3, tenantId: 'T-002', title: 'Risco crítico atualizado', time: 'Há 2 dias', read: true },
 ]
 
 export const MOCK_RISKS = [
   {
     id: 'RSK-001',
+    tenantId: 'T-001',
     name: 'Corrupção em Licitações',
     prob: 2,
     impact: 5,
     owner: 'João Silva',
     status: 'Crítico',
-    rootCause: 'Falta de segregação de funções',
+    rootCause: 'Falta de segregação',
   },
   {
     id: 'RSK-002',
+    tenantId: 'T-001',
     name: 'Vazamento de Dados (LGPD)',
     prob: 3,
     impact: 4,
     owner: 'Maria Souza',
     status: 'Alto',
-    rootCause: 'Sistemas legados sem criptografia',
+    rootCause: 'Sistemas legados',
   },
   {
     id: 'RSK-003',
+    tenantId: 'T-002',
     name: 'Falha em Due Diligence',
     prob: 4,
     impact: 3,
     owner: 'Carlos Dias',
     status: 'Médio',
-    rootCause: 'Processo manual e desatualizado',
-  },
-  {
-    id: 'RSK-004',
-    name: 'Assédio no Ambiente de Trabalho',
-    prob: 2,
-    impact: 4,
-    owner: 'RH',
-    status: 'Alto',
-    rootCause: 'Falta de treinamento contínuo',
+    rootCause: 'Processo manual',
   },
 ]
 
 export const MOCK_OBLIGATIONS = [
   {
     id: 1,
+    tenantId: 'T-001',
     name: 'Renovação Alvará',
     type: 'Legal',
-    date: '2023-11-15',
+    date: '2024-11-15',
     owner: 'Jurídico',
     status: 'Vigente',
   },
   {
     id: 2,
-    name: 'Reporte Anual CVM',
+    tenantId: 'T-001',
+    name: 'Reporte Anual',
     type: 'Legal',
     date: '2023-10-01',
     owner: 'Financeiro',
@@ -62,6 +97,7 @@ export const MOCK_OBLIGATIONS = [
   },
   {
     id: 3,
+    tenantId: 'T-002',
     name: 'Auditoria ISO 37301',
     type: 'Voluntária',
     date: '2024-01-20',
@@ -73,6 +109,7 @@ export const MOCK_OBLIGATIONS = [
 export const MOCK_TRAININGS = [
   {
     id: 1,
+    tenantId: 'T-001',
     title: 'Código de Conduta 2024',
     progress: 100,
     status: 'Concluído',
@@ -80,13 +117,15 @@ export const MOCK_TRAININGS = [
   },
   {
     id: 2,
-    title: 'Prevenção à Lavagem de Dinheiro',
+    tenantId: 'T-001',
+    title: 'PLD',
     progress: 45,
     status: 'Em Andamento',
     efficacy: 'Pendente',
   },
   {
     id: 3,
+    tenantId: 'T-002',
     title: 'Segurança da Informação',
     progress: 0,
     status: 'Não Iniciado',
@@ -97,96 +136,78 @@ export const MOCK_TRAININGS = [
 export const MOCK_POLICIES = [
   {
     id: 1,
+    tenantId: 'T-001',
     name: 'Política Anticorrupção',
     version: 'v2.1',
     status: 'Publicada',
     workflow: 'Aprovado',
     readConfirmation: 92,
     reference: 'ISO 37301: 5.2',
-    date: '10/05/2023',
   },
   {
     id: 2,
+    tenantId: 'T-002',
     name: 'Política de Brindes',
     version: 'v1.0',
     status: 'Em Revisão',
-    workflow: 'Pendente Assinatura',
+    workflow: 'Pendente',
     readConfirmation: 0,
     reference: 'ISO 37301: 5.2.1',
-    date: '12/08/2023',
-  },
-  {
-    id: 3,
-    name: 'Código de Ética',
-    version: 'v3.0',
-    status: 'Publicada',
-    workflow: 'Aprovado',
-    readConfirmation: 100,
-    reference: 'ISO 37301: 5.1',
-    date: '01/01/2023',
   },
 ]
 
 export const MOCK_ACTION_PLANS = [
   {
     id: 'PA-01',
-    task: 'Revisar matriz de riscos',
+    tenantId: 'T-001',
+    task: 'Revisar matriz',
     owner: 'Compliance',
-    deadline: '30/11/2023',
+    deadline: '30/11/2024',
     status: 'Em Progresso',
   },
   {
     id: 'PA-02',
-    task: 'Implementar novo canal de denúncias',
+    tenantId: 'T-002',
+    task: 'Canal de denúncias',
     owner: 'TI',
-    deadline: '15/12/2023',
+    deadline: '15/12/2024',
     status: 'Atrasado',
-  },
-  {
-    id: 'PA-03',
-    task: 'Treinamento de alta gestão',
-    owner: 'RH',
-    deadline: '10/10/2023',
-    status: 'Concluído',
   },
 ]
 
 export const MOCK_AUDIT_LOGS = [
   {
     id: 1,
-    user: 'Admin (João Silva)',
-    action: 'Atualização de Risco',
-    date: '2023-10-25 14:30',
-    detail: 'RSK-002 Impacto alterado para 4',
+    tenantId: 'T-001',
+    user: 'Admin',
+    action: 'Atualização Risco',
+    date: '2024-10-25',
+    detail: 'RSK-001 alterado',
   },
   {
     id: 2,
-    user: 'Gestor (Maria Souza)',
-    action: 'Upload de Documento',
-    date: '2023-10-24 09:15',
-    detail: 'Evidencia_Reuniao_SWOT.pdf adicionado',
-  },
-  {
-    id: 3,
+    tenantId: 'T-002',
     user: 'Sistema',
-    action: 'Alerta Automático',
-    date: '2023-10-23 00:00',
-    detail: 'Aviso de vencimento de Alvará enviado',
+    action: 'Alerta',
+    date: '2024-10-23',
+    detail: 'Aviso enviado',
   },
 ]
 
 export const MOCK_INVESTIGATIONS = [
   {
-    id: 'INV-2024-01',
-    subject: 'Possível fraude em compras',
+    id: 'INV-01',
+    tenantId: 'T-001',
+    subject: 'Possível fraude',
     status: 'Em Andamento',
     deadline: '15/12/2024',
-    extensionReason: 'Aguardando quebra de sigilo bancário',
-    investigator: 'Comitê de Ética',
+    extensionReason: 'Aguardando dados',
+    investigator: 'Comitê',
   },
   {
-    id: 'INV-2024-02',
-    subject: 'Assédio Moral no depto Comercial',
+    id: 'INV-02',
+    tenantId: 'T-002',
+    subject: 'Assédio Moral',
     status: 'Concluída',
     deadline: '01/11/2024',
     extensionReason: '-',
@@ -196,30 +217,21 @@ export const MOCK_INVESTIGATIONS = [
 
 export const MOCK_NCS = [
   {
-    id: 'NC-2024-01',
+    id: 'NC-01',
+    tenantId: 'T-001',
     desc: 'Falha em due diligence',
-    type: 'Falha de Processo (Não Conformidade)',
-    origin: 'Auditoria Interna',
+    type: 'Não Conformidade',
+    origin: 'Auditoria',
     phase: 'Plano de Ação',
     effectiveness: 'Pendente Verificação',
-    deadline: '15/01/2025',
   },
   {
-    id: 'NC-2024-02',
-    desc: 'Ausência de política de brindes',
-    type: 'Ausência de Controle (Não Compliance)',
+    id: 'NC-02',
+    tenantId: 'T-002',
+    desc: 'Ausência de política',
+    type: 'Não Compliance',
     origin: 'Monitoramento',
     phase: 'Análise de Causa Raiz',
     effectiveness: 'Pendente',
-    deadline: '30/11/2024',
-  },
-  {
-    id: 'NC-2023-14',
-    desc: 'Pagamento não justificado',
-    type: 'Falha de Processo (Não Conformidade)',
-    origin: 'Canal de Denúncia',
-    phase: 'Fechada',
-    effectiveness: 'Eficácia Comprovada',
-    deadline: '-',
   },
 ]
