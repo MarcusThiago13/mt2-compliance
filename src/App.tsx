@@ -7,6 +7,9 @@ import Index from './pages/Index'
 import NotFound from './pages/NotFound'
 
 // Modules
+import DadosOrganizacaoPage from './pages/modules/DadosOrganizacaoPage'
+import OrgaoDiretivoPage from './pages/modules/OrgaoDiretivoPage'
+import FuncaoCompliancePage from './pages/modules/FuncaoCompliancePage'
 import ContextoPage from './pages/modules/ContextoPage'
 import LiderancaPage from './pages/modules/LiderancaPage'
 import PlanejamentoPage from './pages/modules/PlanejamentoPage'
@@ -23,6 +26,9 @@ const App = () => (
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Index />} />
+          <Route path="/modulo/1" element={<DadosOrganizacaoPage />} />
+          <Route path="/modulo/2" element={<OrgaoDiretivoPage />} />
+          <Route path="/modulo/3" element={<FuncaoCompliancePage />} />
           <Route path="/modulo/4" element={<ContextoPage />} />
           <Route path="/modulo/5" element={<LiderancaPage />} />
           <Route path="/modulo/6" element={<PlanejamentoPage />} />

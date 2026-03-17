@@ -11,6 +11,9 @@ const maturityData = [{ name: 'Maturidade', value: 78, fill: 'var(--color-primar
 const chartConfig = { primary: { label: 'Compliance', color: 'hsl(var(--primary))' } }
 
 const isoModules = [
+  { id: 1, name: 'Dados da Organização', progress: 100 },
+  { id: 2, name: 'Órgão Diretivo / Alta Direção', progress: 100 },
+  { id: 3, name: 'Função de Compliance', progress: 85 },
   { id: 4, name: 'Contexto da Organização', progress: 100 },
   { id: 5, name: 'Liderança', progress: 85 },
   { id: 6, name: 'Planejamento', progress: 60 },
@@ -26,7 +29,9 @@ export default function Index() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-primary">Dashboard Executivo</h1>
-          <p className="text-muted-foreground">Visão geral do programa de compliance ISO 37301.</p>
+          <p className="text-muted-foreground">
+            Visão geral do programa mt3 compliance (ISO 37301).
+          </p>
         </div>
       </div>
 
@@ -193,25 +198,31 @@ export default function Index() {
         </Card>
       </div>
 
-      <h2 className="text-xl font-semibold tracking-tight mt-8 mb-4">Progresso por Módulo ISO</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <h2 className="text-xl font-semibold tracking-tight mt-8 mb-4">Progresso dos Módulos</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         {isoModules.map((mod) => (
           <Link key={mod.id} to={`/modulo/${mod.id}`}>
             <Card className="hover:border-primary/50 transition-colors cursor-pointer group h-full shadow-sm">
               <CardHeader className="pb-2">
-                <CardTitle className="text-base group-hover:text-primary transition-colors flex items-center justify-between">
+                <CardTitle className="text-sm font-semibold group-hover:text-primary transition-colors flex items-center justify-between">
                   Módulo {mod.id}
                   <Badge
                     variant={mod.progress === 100 ? 'default' : 'secondary'}
-                    className={mod.progress === 100 ? 'bg-success hover:bg-success/80' : ''}
+                    className={
+                      mod.progress === 100
+                        ? 'bg-success hover:bg-success/80 text-[10px]'
+                        : 'text-[10px]'
+                    }
                   >
                     {mod.progress}%
                   </Badge>
                 </CardTitle>
-                <CardDescription className="line-clamp-1">{mod.name}</CardDescription>
+                <CardDescription className="line-clamp-2 text-xs font-medium text-foreground mt-1">
+                  {mod.name}
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <Progress value={mod.progress} className="h-2" />
+                <Progress value={mod.progress} className="h-1.5" />
               </CardContent>
             </Card>
           </Link>

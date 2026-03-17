@@ -14,7 +14,7 @@ export default function Layout() {
             <Outlet />
           </main>
           <footer className="border-t py-4 text-center text-sm text-muted-foreground bg-muted/20">
-            Sistema de Gestão de Compliance - Em conformidade com ISO 37301:2021 |{' '}
+            mt3 compliance - Em conformidade com ISO 37301:2021 |{' '}
             <a href="#" className="underline hover:text-primary">
               Suporte
             </a>
