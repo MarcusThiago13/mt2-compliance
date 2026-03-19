@@ -1,176 +1,133 @@
 import { useState } from 'react'
 import { PageHeader } from '@/components/PageHeader'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-import { Lock, Send, ShieldAlert, FileSearch } from 'lucide-react'
-import { useToast } from '@/hooks/use-toast'
+import { Card, CardContent } from '@/components/ui/card'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 import useAuthStore from '@/stores/useAuthStore'
-import { MOCK_INVESTIGATIONS } from '@/lib/mock'
-import { ComplianceChecklistItem } from '@/components/ComplianceChecklist'
+import { useToast } from '@/hooks/use-toast'
+import { Settings, ShieldAlert, AlertTriangle, FileSearch } from 'lucide-react'
+
+import Section81Planejamento from './components/operacao/Section81Planejamento'
+import Section82Controles from './components/operacao/Section82Controles'
+import Section83Preocupacoes from './components/operacao/Section83Preocupacoes'
+import Section84Investigacao from './components/operacao/Section84Investigacao'
 
 export default function OperacaoPage() {
-  const { user, currentTenantId } = useAuthStore()
+  const { user } = useAuthStore()
   const { toast } = useToast()
-
   const canEdit = user?.role === 'SUPER_ADMIN' || user?.role === 'EDITOR'
-  const canViewInvestigations = canEdit
-  const investigations = MOCK_INVESTIGATIONS.filter((i) => i.tenantId === currentTenantId)
+  const [auditMode, setAuditMode] = useState(true)
 
-  const handleDenunciaSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    toast({ title: 'Registro Efetuado', description: 'O protocolo criptografado foi gerado.' })
+  const handleExport = (format: string) => {
+    toast({
+      title: 'Exportação Iniciada',
+      description: `Gerando Relatório do Módulo 8 (Operação) em ${format.toUpperCase()}...`,
+    })
   }
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="8. Operação"
-        description="Gestão de canais de relato, investigações e due diligence (Item 8.1 a 8.4)."
+        description="Planejamento e controle operacional, procedimentos, canal de relatos e investigações (ISO 37301:2021)."
         breadcrumbs={[{ label: 'Início', path: '/' }, { label: 'Módulo 8' }]}
+        onExport={handleExport}
       />
 
-      <Tabs defaultValue="denuncias" className="w-full">
-        <TabsList className="bg-muted/40 p-1 rounded-lg mb-6 inline-flex h-auto items-center">
-          <TabsTrigger
-            value="denuncias"
-            className="py-2.5 px-4 text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-md transition-all"
-          >
-            <Lock className="w-4 h-4 mr-2" /> Canal de Relatos
+      <div className="flex justify-between items-center bg-muted/20 p-3 rounded-lg border border-border/50 -mt-2">
+        <div className="flex items-center gap-3">
+          <Switch id="audit-mode" checked={auditMode} onCheckedChange={setAuditMode} />
+          <Label htmlFor="audit-mode" className="text-sm font-medium cursor-pointer">
+            Modo Auditor Ativo{' '}
+            <span className="text-muted-foreground font-normal">(Navegação Sequencial ISO)</span>
+          </Label>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="shadow-none bg-primary/5 border-primary/20">
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="p-3 bg-primary/15 rounded-full text-primary">
+              <Settings className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                8.1 Controles
+              </p>
+              <p className="text-2xl font-bold text-foreground">24 Ativos</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="shadow-none bg-warning/5 border-warning/20">
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="p-3 bg-warning/15 rounded-full text-warning">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                8.2 Exceções
+              </p>
+              <p className="text-2xl font-bold text-warning">3 Abertas</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="shadow-none bg-destructive/5 border-destructive/20">
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="p-3 bg-destructive/15 rounded-full text-destructive">
+              <ShieldAlert className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                8.3 Preocupações
+              </p>
+              <p className="text-2xl font-bold text-destructive">5 Relatos</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="shadow-none bg-secondary/10 border-secondary/20">
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="p-3 bg-background rounded-full text-foreground shadow-sm">
+              <FileSearch className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                8.4 Investigações
+              </p>
+              <p className="text-2xl font-bold text-foreground">2 em Curso</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Tabs defaultValue="8.1" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 bg-muted/30 p-1.5 rounded-xl h-auto mb-6 shadow-sm border border-border/40">
+          <TabsTrigger value="8.1" className="py-2.5 text-xs lg:text-sm font-medium rounded-lg">
+            8.1 Planejamento Operacional
           </TabsTrigger>
-          {canViewInvestigations && (
-            <TabsTrigger
-              value="investigacoes"
-              className="py-2.5 px-4 text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-md transition-all"
-            >
-              <ShieldAlert className="w-4 h-4 mr-2 text-primary" /> Gestão de Investigações
-            </TabsTrigger>
-          )}
+          <TabsTrigger value="8.2" className="py-2.5 text-xs lg:text-sm font-medium rounded-lg">
+            8.2 Controles e Procedimentos
+          </TabsTrigger>
+          <TabsTrigger value="8.3" className="py-2.5 text-xs lg:text-sm font-medium rounded-lg">
+            8.3 Preocupações (Relatos)
+          </TabsTrigger>
+          <TabsTrigger value="8.4" className="py-2.5 text-xs lg:text-sm font-medium rounded-lg">
+            8.4 Processo de Investigação
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="denuncias" className="max-w-3xl mx-auto mt-2 space-y-6">
-          <Card>
-            <CardHeader className="bg-primary/5 border-b border-border/40 pb-6 rounded-t-xl">
-              <CardTitle className="text-primary flex items-center gap-2">
-                <Lock className="w-5 h-5" /> Canal Seguro e Sigiloso
-              </CardTitle>
-              <CardDescription className="text-foreground/80">
-                O relato pode ser feito de forma anônima. Garantimos a proteção contra retaliações
-                conforme a ISO 37301.
-              </CardDescription>
-            </CardHeader>
-            <form onSubmit={handleDenunciaSubmit}>
-              <CardContent className="pt-6 space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">
-                    Descreva detalhadamente a situação
-                  </label>
-                  <Textarea
-                    placeholder="Inclua datas, locais, pessoas envolvidas e evidências (se houver)..."
-                    className="min-h-[180px] resize-y bg-muted/20"
-                    required
-                  />
-                </div>
-              </CardContent>
-              <CardFooter className="bg-muted/10 border-t border-border/40 justify-end p-4 rounded-b-xl">
-                <Button type="submit" className="px-6">
-                  <Send className="w-4 h-4 mr-2" /> Submeter Relato
-                </Button>
-              </CardFooter>
-            </form>
-          </Card>
-
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold mb-2">Checklist de Auditoria (Item 8.3)</h4>
-            <ComplianceChecklistItem
-              clause="8.3.1"
-              title="Canal de Relatos Eficaz"
-              description="A organização estabeleceu e implementou canais visíveis e acessíveis para relatos de preocupações em sigilo?"
-              canEdit={canEdit}
-            />
-            <ComplianceChecklistItem
-              clause="8.3.2"
-              title="Proteção contra Retaliação"
-              description="A organização assegura que o pessoal pode relatar de boa-fé sem medo de retaliação?"
-              canEdit={canEdit}
-            />
-          </div>
+        <TabsContent value="8.1" className="mt-0 outline-none animate-in fade-in-50 duration-300">
+          <Section81Planejamento canEdit={canEdit} />
         </TabsContent>
-
-        {canViewInvestigations && (
-          <TabsContent value="investigacoes" className="mt-2 space-y-6">
-            <Card>
-              <CardHeader className="border-b border-border/40 pb-4 flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <FileSearch className="w-5 h-5 text-primary" /> Dossiês Investigativos
-                  </CardTitle>
-                  <CardDescription className="mt-1">
-                    Acesso restrito à alta gestão e comitê de ética.
-                  </CardDescription>
-                </div>
-                <Button size="sm" variant="outline">
-                  Novo Dossiê
-                </Button>
-              </CardHeader>
-              <CardContent className="p-0 overflow-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-muted/20">
-                      <TableHead className="w-[120px]">Protocolo</TableHead>
-                      <TableHead>Assunto Classificado</TableHead>
-                      <TableHead>Investigador Líder</TableHead>
-                      <TableHead>Prazo Legal</TableHead>
-                      <TableHead>Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {investigations.map((inv) => (
-                      <TableRow key={inv.id}>
-                        <TableCell className="font-semibold text-primary">{inv.id}</TableCell>
-                        <TableCell className="font-medium">{inv.subject}</TableCell>
-                        <TableCell className="text-muted-foreground">{inv.investigator}</TableCell>
-                        <TableCell className="text-muted-foreground">{inv.deadline}</TableCell>
-                        <TableCell>
-                          <Badge variant={inv.status === 'Concluída' ? 'success' : 'warning'}>
-                            {inv.status}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-
-            <div className="space-y-3">
-              <h4 className="text-sm font-semibold mb-2">Checklist de Auditoria (Item 8.4)</h4>
-              <ComplianceChecklistItem
-                clause="8.4.1"
-                title="Processos de Investigação"
-                description="Processos estabelecidos para avaliar, investigar e fechar relatos de não conformidade de forma independente e livre de conflitos?"
-                canEdit={canEdit}
-              />
-            </div>
-          </TabsContent>
-        )}
+        <TabsContent value="8.2" className="mt-0 outline-none animate-in fade-in-50 duration-300">
+          <Section82Controles canEdit={canEdit} />
+        </TabsContent>
+        <TabsContent value="8.3" className="mt-0 outline-none animate-in fade-in-50 duration-300">
+          <Section83Preocupacoes canEdit={canEdit} />
+        </TabsContent>
+        <TabsContent value="8.4" className="mt-0 outline-none animate-in fade-in-50 duration-300">
+          <Section84Investigacao canEdit={canEdit} />
+        </TabsContent>
       </Tabs>
     </div>
   )
