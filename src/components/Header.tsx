@@ -1,4 +1,4 @@
-import { Bell, Search, User, LogOut, ArrowLeftRight } from 'lucide-react'
+import { Bell, Search, User, LogOut, ArrowLeftRight, Settings } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -33,97 +33,122 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-4 border-b bg-background/95 px-4 md:px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-4 border-b border-border/40 bg-background/95 px-4 md:px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
       <SidebarTrigger className="md:hidden" />
 
       <div className="hidden md:flex flex-col">
-        <span className="text-sm font-semibold text-primary">{currentTenant?.name}</span>
-        <span className="text-[10px] text-muted-foreground uppercase tracking-wider bg-muted px-1.5 py-0.5 rounded w-fit">
+        <span className="text-sm font-semibold text-foreground">{currentTenant?.name}</span>
+        <span className="text-[10px] text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
+          <div className="w-1.5 h-1.5 rounded-full bg-success"></div>
           Ambiente Isolado
         </span>
       </div>
 
-      <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 justify-end">
+      <div className="flex flex-1 items-center gap-3 md:ml-auto md:gap-4 lg:gap-6 justify-end">
         {isSuperAdmin && (
           <Button
             variant="outline"
             size="sm"
             onClick={handleSwitchTenant}
-            className="hidden sm:flex"
+            className="hidden sm:flex h-9 border-border/60 text-muted-foreground hover:text-foreground"
           >
-            <ArrowLeftRight className="w-4 h-4 mr-2" /> Trocar Cliente
+            <ArrowLeftRight className="w-4 h-4 mr-2 opacity-70" /> Trocar Cliente
           </Button>
         )}
 
-        <form className="hidden sm:flex flex-1 sm:flex-initial">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <form className="hidden sm:flex flex-1 sm:flex-initial max-w-sm">
+          <div className="relative w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Buscar no compliance..."
-              className="pl-8 sm:w-[200px] lg:w-[300px] bg-muted/50 focus-visible:bg-background h-9"
+              placeholder="Buscar evidências, módulos..."
+              className="pl-9 w-full bg-muted/40 border-border/40 focus-visible:bg-background focus-visible:ring-primary/30 h-9 rounded-full text-sm"
             />
           </div>
         </form>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5" />
-              <Badge className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0 bg-destructive text-[10px]">
-                3
-              </Badge>
-              <span className="sr-only">Notificações</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
-            <DropdownMenuLabel>Alertas do {currentTenant?.name}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="flex flex-col items-start gap-1 p-3 cursor-pointer">
-              <span className="font-medium text-sm">Ação Pendente</span>
-              <span className="text-xs text-muted-foreground">Verifique o módulo de riscos.</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative text-muted-foreground hover:text-foreground rounded-full h-9 w-9"
+              >
+                <Bell className="h-5 w-5" />
+                <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-destructive border-2 border-background"></span>
+                <span className="sr-only">Notificações</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-80 p-0 overflow-hidden">
+              <div className="bg-muted/30 px-4 py-3 border-b border-border/40">
+                <span className="text-sm font-semibold">Central de Alertas</span>
+              </div>
+              <div className="py-2">
+                <DropdownMenuItem className="flex flex-col items-start gap-1 p-3 px-4 cursor-pointer focus:bg-muted/50">
+                  <div className="flex items-center gap-2 w-full">
+                    <span className="w-2 h-2 rounded-full bg-warning shrink-0"></span>
+                    <span className="font-medium text-sm text-foreground">Ação Pendente</span>
+                  </div>
+                  <span className="text-xs text-muted-foreground pl-4">
+                    Verifique o módulo de riscos no planejamento.
+                  </span>
+                </DropdownMenuItem>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full border shadow-sm bg-primary/5"
-            >
-              <User className="h-5 w-5 text-primary" />
-              <span className="sr-only">Menu do Usuário</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{user?.name}</p>
-                <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
-                <Badge variant="secondary" className="mt-2 w-fit text-[10px]">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full h-9 w-9 bg-primary/10 hover:bg-primary/20 border-border/40"
+              >
+                <span className="text-sm font-medium text-primary">{user?.name.charAt(0)}</span>
+                <span className="sr-only">Menu do Usuário</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64 p-2">
+              <div className="flex items-center justify-start gap-3 p-2">
+                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
+                  {user?.name.charAt(0)}
+                </div>
+                <div className="flex flex-col space-y-0.5">
+                  <p className="text-sm font-medium leading-none text-foreground">{user?.name}</p>
+                  <p className="text-xs text-muted-foreground">{user?.email}</p>
+                </div>
+              </div>
+              <div className="px-2 pb-2 pt-1">
+                <Badge variant="soft" className="text-[10px] w-auto inline-flex">
                   {user?.role}
                 </Badge>
               </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {isSuperAdmin && (
-              <>
-                <DropdownMenuItem onClick={handleSwitchTenant} className="cursor-pointer sm:hidden">
-                  <ArrowLeftRight className="w-4 h-4 mr-2" /> Painel Super Admin
-                </DropdownMenuItem>
-                <DropdownMenuSeparator className="sm:hidden" />
-              </>
-            )}
-            <DropdownMenuItem
-              onClick={handleLogout}
-              className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive"
-            >
-              <LogOut className="w-4 h-4 mr-2" /> Sair
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer py-2.5">
+                <Settings className="w-4 h-4 mr-2 text-muted-foreground" /> Configurações
+              </DropdownMenuItem>
+              {isSuperAdmin && (
+                <>
+                  <DropdownMenuItem
+                    onClick={handleSwitchTenant}
+                    className="cursor-pointer py-2.5 sm:hidden"
+                  >
+                    <ArrowLeftRight className="w-4 h-4 mr-2 text-muted-foreground" /> Painel Super
+                    Admin
+                  </DropdownMenuItem>
+                </>
+              )}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive py-2.5"
+              >
+                <LogOut className="w-4 h-4 mr-2" /> Encerrar Sessão
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   )

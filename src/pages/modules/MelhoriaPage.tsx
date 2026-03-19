@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { TrendingUp, Plus } from 'lucide-react'
 import useAuthStore from '@/stores/useAuthStore'
 import { MOCK_NCS } from '@/lib/mock'
 
@@ -22,24 +23,35 @@ export default function MelhoriaPage() {
     <div className="space-y-6">
       <PageHeader
         title="10. Melhoria"
-        breadcrumbs={[{ label: 'Início', path: '/' }, { label: 'ISO Módulo 10' }]}
+        description="Tratamento de não conformidades, ações corretivas e melhoria contínua (Item 10.1 e 10.2)."
+        breadcrumbs={[{ label: 'Início', path: '/' }, { label: 'Módulo 10' }]}
       />
 
       <Card>
-        <CardHeader className="flex flex-row items-start justify-between">
+        <CardHeader className="flex flex-row items-center justify-between border-b border-border/40 pb-4">
           <div>
-            <CardTitle>Não Conformidades (10.2)</CardTitle>
-            <CardDescription>Ações corretivas e eficácia.</CardDescription>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <TrendingUp className="w-5 h-5 text-primary" /> Registro de Não Conformidades (RNC)
+            </CardTitle>
+            <CardDescription className="mt-1">
+              Avaliação de causas raízes e eficácia das ações implementadas.
+            </CardDescription>
           </div>
-          {canEdit && <Button size="sm">Registrar NC</Button>}
+          {canEdit && (
+            <Button size="sm">
+              <Plus className="w-4 h-4 mr-2" />
+              Emitir RNC
+            </Button>
+          )}
         </CardHeader>
         <CardContent className="p-0 overflow-auto">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Descrição</TableHead>
-                <TableHead>Origem</TableHead>
-                <TableHead>Fase</TableHead>
+              <TableRow className="bg-muted/20">
+                <TableHead>Identificação do Desvio</TableHead>
+                <TableHead>Origem do Apontamento</TableHead>
+                <TableHead>Fase Atual</TableHead>
+                <TableHead>Status de Eficácia</TableHead>
                 {canEdit && <TableHead className="text-right">Ações</TableHead>}
               </TableRow>
             </TableHeader>
@@ -47,17 +59,24 @@ export default function MelhoriaPage() {
               {ncs.map((nc) => (
                 <TableRow key={nc.id}>
                   <TableCell>
-                    <div className="font-medium">{nc.id}</div>
-                    <div className="text-xs text-muted-foreground">{nc.desc}</div>
+                    <div className="font-semibold text-primary">{nc.id}</div>
+                    <div className="text-sm text-foreground mt-0.5">{nc.desc}</div>
                   </TableCell>
-                  <TableCell className="text-xs">{nc.origin}</TableCell>
+                  <TableCell className="text-muted-foreground">{nc.origin}</TableCell>
                   <TableCell>
-                    <Badge variant="secondary">{nc.phase}</Badge>
+                    <Badge variant="soft" className="uppercase tracking-wider text-[10px]">
+                      {nc.phase}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-xs font-medium text-muted-foreground">
+                      {nc.effectiveness}
+                    </span>
                   </TableCell>
                   {canEdit && (
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" className="text-primary">
-                        Tratar
+                      <Button variant="outline" size="sm" className="h-8 text-xs">
+                        Analisar
                       </Button>
                     </TableCell>
                   )}

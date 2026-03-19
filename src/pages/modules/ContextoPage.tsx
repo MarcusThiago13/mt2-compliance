@@ -16,48 +16,84 @@ export default function ContextoPage() {
     <div className="space-y-6">
       <PageHeader
         title="4. Contexto da Organização"
-        description="Alinhamento estrutural baseado na ISO 37301:2021 para gestão de compliance."
-        breadcrumbs={[{ label: 'Início', path: '/' }, { label: 'ISO Módulo 4' }]}
+        description="Compreensão estrutural, expectativas das partes interessadas e mapeamento de riscos (ISO 37301:2021)."
+        breadcrumbs={[{ label: 'Início', path: '/' }, { label: 'Módulo 4' }]}
       />
 
       <Tabs defaultValue="4.1" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 bg-muted/50 p-1 rounded-lg h-auto mb-2 shadow-sm">
-          <TabsTrigger value="4.1" className="py-2.5 text-xs lg:text-sm transition-all">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 bg-muted/30 p-1.5 rounded-xl h-auto mb-6 shadow-sm border border-border/40">
+          <TabsTrigger
+            value="4.1"
+            className="py-2.5 text-xs lg:text-sm transition-all data-[state=active]:shadow-sm rounded-lg font-medium"
+          >
             4.1 Contexto
           </TabsTrigger>
-          <TabsTrigger value="4.2" className="py-2.5 text-xs lg:text-sm transition-all">
+          <TabsTrigger
+            value="4.2"
+            className="py-2.5 text-xs lg:text-sm transition-all data-[state=active]:shadow-sm rounded-lg font-medium"
+          >
             4.2 Partes Int.
           </TabsTrigger>
-          <TabsTrigger value="4.3" className="py-2.5 text-xs lg:text-sm transition-all">
+          <TabsTrigger
+            value="4.3"
+            className="py-2.5 text-xs lg:text-sm transition-all data-[state=active]:shadow-sm rounded-lg font-medium"
+          >
             4.3 Escopo
           </TabsTrigger>
-          <TabsTrigger value="4.4" className="py-2.5 text-xs lg:text-sm transition-all">
+          <TabsTrigger
+            value="4.4"
+            className="py-2.5 text-xs lg:text-sm transition-all data-[state=active]:shadow-sm rounded-lg font-medium"
+          >
             4.4 Sistema
           </TabsTrigger>
-          <TabsTrigger value="4.5" className="py-2.5 text-xs lg:text-sm transition-all">
+          <TabsTrigger
+            value="4.5"
+            className="py-2.5 text-xs lg:text-sm transition-all data-[state=active]:shadow-sm rounded-lg font-medium"
+          >
             4.5 Obrigações
           </TabsTrigger>
-          <TabsTrigger value="4.6" className="py-2.5 text-xs lg:text-sm transition-all">
+          <TabsTrigger
+            value="4.6"
+            className="py-2.5 text-xs lg:text-sm transition-all data-[state=active]:shadow-sm rounded-lg font-medium"
+          >
             4.6 Riscos
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="4.1" className="mt-4 outline-none">
+        <TabsContent
+          value="4.1"
+          className="mt-0 outline-none animate-in fade-in-50 zoom-in-95 duration-200"
+        >
           <Section41Context canEdit={canEdit} />
         </TabsContent>
-        <TabsContent value="4.2" className="mt-4 outline-none">
+        <TabsContent
+          value="4.2"
+          className="mt-0 outline-none animate-in fade-in-50 zoom-in-95 duration-200"
+        >
           <Section42Parties canEdit={canEdit} />
         </TabsContent>
-        <TabsContent value="4.3" className="mt-4 outline-none">
+        <TabsContent
+          value="4.3"
+          className="mt-0 outline-none animate-in fade-in-50 zoom-in-95 duration-200"
+        >
           <Section43Scope canEdit={canEdit} />
         </TabsContent>
-        <TabsContent value="4.4" className="mt-4 outline-none">
+        <TabsContent
+          value="4.4"
+          className="mt-0 outline-none animate-in fade-in-50 zoom-in-95 duration-200"
+        >
           <Section44System canEdit={canEdit} />
         </TabsContent>
-        <TabsContent value="4.5" className="mt-4 outline-none">
+        <TabsContent
+          value="4.5"
+          className="mt-0 outline-none animate-in fade-in-50 zoom-in-95 duration-200"
+        >
           <Section45Obligations canEdit={canEdit} />
         </TabsContent>
-        <TabsContent value="4.6" className="mt-4 outline-none">
+        <TabsContent
+          value="4.6"
+          className="mt-0 outline-none animate-in fade-in-50 zoom-in-95 duration-200"
+        >
           <Section46Risks canEdit={canEdit} />
         </TabsContent>
       </Tabs>

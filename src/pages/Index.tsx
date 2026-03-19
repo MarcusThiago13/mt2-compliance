@@ -1,21 +1,35 @@
-import { AlertTriangle, CheckCircle, ShieldAlert, BookOpen, ChevronRight } from 'lucide-react'
+import {
+  AlertTriangle,
+  CheckCircle,
+  ShieldAlert,
+  BookOpen,
+  ChevronRight,
+  Activity,
+} from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Link } from 'react-router-dom'
-import { ChartContainer } from '@/components/ui/chart'
-import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from 'recharts'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
+import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, CartesianGrid } from 'recharts'
 import { Badge } from '@/components/ui/badge'
 import useAuthStore from '@/stores/useAuthStore'
 import { MOCK_NOTIFICATIONS, MOCK_NCS, MOCK_RISKS } from '@/lib/mock'
 
-const maturityData = [{ name: 'Maturidade', value: 78, fill: 'var(--color-primary)' }]
-const chartConfig = { primary: { label: 'Compliance', color: 'hsl(var(--primary))' } }
+const maturityHistoryData = [
+  { month: 'Jan', value: 65 },
+  { month: 'Fev', value: 68 },
+  { month: 'Mar', value: 72 },
+  { month: 'Abr', value: 75 },
+  { month: 'Mai', value: 76 },
+  { month: 'Jun', value: 78 },
+]
+const chartConfig = { primary: { label: 'Maturidade (%)', color: 'hsl(var(--primary))' } }
 
 const isoModules = [
   { id: 1, name: 'Dados da Organização', progress: 100 },
   { id: 2, name: 'Órgão Diretivo', progress: 100 },
   { id: 3, name: 'Função de Compliance', progress: 85 },
-  { id: 4, name: 'Contexto da Organização', progress: 100 },
+  { id: 4, name: 'Contexto', progress: 100 },
   { id: 5, name: 'Liderança', progress: 85 },
   { id: 6, name: 'Planejamento', progress: 60 },
   { id: 7, name: 'Apoio', progress: 40 },
@@ -34,155 +48,166 @@ export default function Index() {
   const tenantNCs = MOCK_NCS.filter((n) => n.tenantId === currentTenantId)
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-primary">Dashboard Executivo</h1>
-        <p className="text-muted-foreground">Visão geral do programa mt3 compliance.</p>
+    <div className="space-y-8 animate-fade-in-up">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-2 border-b border-border/40">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Visão Executiva</h1>
+          <p className="text-muted-foreground mt-1">
+            Acompanhamento central do programa de compliance e integridade.
+          </p>
+        </div>
+        <div className="flex items-center gap-2 text-sm font-medium">
+          <Badge variant="soft" className="px-3 py-1 text-sm">
+            <Activity className="w-4 h-4 mr-2" /> IMC Global: 78%
+          </Badge>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="shadow-sm border-l-4 border-l-destructive">
+        <Card className="hover:shadow-[0_8px_24px_-4px_rgba(0,0,0,0.08)] transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Riscos Críticos</CardTitle>
-            <ShieldAlert className="h-4 w-4 text-destructive" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Riscos Críticos
+            </CardTitle>
+            <div className="p-2 bg-destructive/10 rounded-md">
+              <ShieldAlert className="h-4 w-4 text-destructive" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{tenantRisks.length}</div>
-            <p className="text-xs text-muted-foreground mt-1">Neste ambiente</p>
+            <div className="text-3xl font-bold text-foreground">{tenantRisks.length}</div>
+            <p className="text-xs text-muted-foreground mt-1">Exigem ação imediata</p>
           </CardContent>
         </Card>
-        <Card className="shadow-sm border-l-4 border-l-warning">
+        <Card className="hover:shadow-[0_8px_24px_-4px_rgba(0,0,0,0.08)] transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Obrigações Vencendo</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-warning" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Obrigações Próximas
+            </CardTitle>
+            <div className="p-2 bg-warning/15 rounded-md">
+              <AlertTriangle className="h-4 w-4 text-warning" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2</div>
-            <p className="text-xs text-muted-foreground mt-1">Nos próximos 30 dias</p>
+            <div className="text-3xl font-bold text-foreground">2</div>
+            <p className="text-xs text-muted-foreground mt-1">Vencendo em 30 dias</p>
           </CardContent>
         </Card>
-        <Card className="shadow-sm border-l-4 border-l-primary">
+        <Card className="hover:shadow-[0_8px_24px_-4px_rgba(0,0,0,0.08)] transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Não-Conformidades</CardTitle>
-            <CheckCircle className="h-4 w-4 text-primary" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Não Conformidades
+            </CardTitle>
+            <div className="p-2 bg-primary/10 rounded-md">
+              <CheckCircle className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{tenantNCs.length}</div>
-            <p className="text-xs text-muted-foreground mt-1">Em tratamento</p>
+            <div className="text-3xl font-bold text-foreground">{tenantNCs.length}</div>
+            <p className="text-xs text-muted-foreground mt-1">Em fase de tratamento</p>
           </CardContent>
         </Card>
-        <Card className="shadow-sm border-l-4 border-l-secondary">
+        <Card className="hover:shadow-[0_8px_24px_-4px_rgba(0,0,0,0.08)] transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Treinamentos Pendentes</CardTitle>
-            <BookOpen className="h-4 w-4 text-secondary" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Eficácia Treinamentos
+            </CardTitle>
+            <div className="p-2 bg-success/15 rounded-md">
+              <BookOpen className="h-4 w-4 text-success" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">8%</div>
-            <p className="text-xs text-muted-foreground mt-1">Da força de trabalho</p>
+            <div className="text-3xl font-bold text-foreground">92%</div>
+            <p className="text-xs text-muted-foreground mt-1">Média de aprovação</p>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-1 lg:col-span-2 shadow-sm">
+        <Card className="col-span-1 lg:col-span-4">
           <CardHeader>
-            <CardTitle>Maturidade (IMC)</CardTitle>
-            <CardDescription>Índice de Maturidade de Compliance</CardDescription>
+            <CardTitle>Evolução da Maturidade</CardTitle>
+            <CardDescription>
+              Crescimento do Índice de Maturidade de Compliance (IMC)
+            </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center">
-            <div className="h-[200px] w-full">
+          <CardContent>
+            <div className="h-[250px] w-full">
               <ChartContainer config={chartConfig}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <RadialBarChart
-                    cx="50%"
-                    cy="50%"
-                    innerRadius="70%"
-                    outerRadius="100%"
-                    barSize={20}
-                    data={maturityData}
-                    startAngle={180}
-                    endAngle={0}
+                  <AreaChart
+                    data={maturityHistoryData}
+                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
                   >
-                    <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
-                    <RadialBar
-                      background
-                      dataKey="value"
-                      cornerRadius={10}
-                      fill="var(--color-primary)"
+                    <defs>
+                      <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                      stroke="hsl(var(--border))"
                     />
-                    <text
-                      x="50%"
-                      y="45%"
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      className="text-4xl font-bold fill-foreground"
-                    >
-                      78%
-                    </text>
-                  </RadialBarChart>
+                    <XAxis
+                      dataKey="month"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                      dy={10}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                    />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Area
+                      type="monotone"
+                      dataKey="value"
+                      stroke="hsl(var(--primary))"
+                      strokeWidth={3}
+                      fillOpacity={1}
+                      fill="url(#colorValue)"
+                    />
+                  </AreaChart>
                 </ResponsiveContainer>
               </ChartContainer>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="col-span-1 lg:col-span-3 shadow-sm">
-          <CardHeader>
-            <CardTitle>Mapa de Calor de Riscos</CardTitle>
-            <CardDescription>Impacto vs Probabilidade (Mód. 4.6)</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-5 gap-1 aspect-square max-w-[300px] mx-auto p-4 border rounded-lg bg-muted/10">
-              {Array.from({ length: 25 }).map((_, i) => {
-                const x = (i % 5) + 1
-                const y = 5 - Math.floor(i / 5)
-                const score = x * y
-                let bg =
-                  score > 19
-                    ? 'bg-destructive/90'
-                    : score > 12
-                      ? 'bg-destructive/60'
-                      : score > 6
-                        ? 'bg-warning/40'
-                        : 'bg-success/20'
-                return (
-                  <Link
-                    to="/modulo/4"
-                    key={i}
-                    className={`w-full h-full rounded-sm border border-background/50 hover:scale-105 transition-all cursor-pointer ${bg}`}
-                  />
-                )
-              })}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="col-span-1 lg:col-span-2 shadow-sm overflow-hidden flex flex-col">
-          <CardHeader className="bg-muted/30 pb-4 border-b">
-            <CardTitle className="text-lg">Central de Alertas</CardTitle>
+        <Card className="col-span-1 lg:col-span-3 flex flex-col">
+          <CardHeader className="pb-4">
+            <CardTitle>Central de Notificações</CardTitle>
+            <CardDescription>Últimas movimentações no ambiente</CardDescription>
           </CardHeader>
           <CardContent className="p-0 flex-1 overflow-auto">
-            <div className="divide-y">
+            <div className="divide-y divide-border/40">
               {tenantNotifs.length === 0 ? (
-                <div className="p-4 text-center text-sm text-muted-foreground">Nenhum alerta.</div>
+                <div className="p-6 text-center text-sm text-muted-foreground">
+                  Nenhum alerta recente.
+                </div>
               ) : (
                 tenantNotifs.map((notif) => (
                   <div
                     key={notif.id}
-                    className="p-4 hover:bg-muted/50 transition-colors flex items-start gap-3"
+                    className="p-4 hover:bg-muted/30 transition-colors flex items-start gap-4 cursor-pointer"
                   >
                     <div
-                      className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${notif.read ? 'bg-muted' : 'bg-primary'}`}
+                      className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${notif.read ? 'bg-muted-foreground/30' : 'bg-primary'}`}
                     />
                     <div className="flex-1">
                       <p
-                        className={`text-sm ${notif.read ? 'text-muted-foreground' : 'font-medium text-foreground'}`}
+                        className={`text-sm leading-tight ${notif.read ? 'text-muted-foreground' : 'font-semibold text-foreground'}`}
                       >
                         {notif.title}
                       </p>
-                      <p className="text-xs text-muted-foreground mt-1">{notif.time}</p>
+                      <p className="text-xs text-muted-foreground mt-1.5 font-medium">
+                        {notif.time}
+                      </p>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
+                    <ChevronRight className="w-4 h-4 text-muted-foreground/50 shrink-0" />
                   </div>
                 ))
               )}
@@ -191,29 +216,35 @@ export default function Index() {
         </Card>
       </div>
 
-      <h2 className="text-xl font-semibold tracking-tight mt-8 mb-4">Progresso dos Módulos</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        {isoModules.map((mod) => (
-          <Link key={mod.id} to={`/modulo/${mod.id}`}>
-            <Card className="hover:border-primary/50 transition-colors cursor-pointer group h-full shadow-sm">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold flex justify-between">
-                  Módulo {mod.id}
-                  <Badge
-                    variant={mod.progress === 100 ? 'default' : 'secondary'}
-                    className="text-[10px]"
-                  >
-                    {mod.progress}%
-                  </Badge>
-                </CardTitle>
-                <CardDescription className="line-clamp-2 text-xs mt-1">{mod.name}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Progress value={mod.progress} className="h-1.5" />
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+      <div>
+        <h2 className="text-lg font-semibold tracking-tight mb-4 text-foreground">
+          Status dos Módulos ISO 37301
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {isoModules.map((mod) => (
+            <Link key={mod.id} to={`/modulo/${mod.id}`}>
+              <Card className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer group h-full">
+                <CardHeader className="pb-3 px-4 pt-4">
+                  <CardTitle className="text-sm font-semibold flex justify-between items-center text-foreground group-hover:text-primary transition-colors">
+                    Módulo {mod.id}
+                    <Badge
+                      variant={mod.progress === 100 ? 'soft' : 'outline'}
+                      className="text-[10px] px-1.5 py-0 rounded"
+                    >
+                      {mod.progress}%
+                    </Badge>
+                  </CardTitle>
+                  <CardDescription className="line-clamp-2 text-xs mt-1.5 h-8">
+                    {mod.name}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="px-4 pb-4">
+                  <Progress value={mod.progress} className="h-1.5 bg-muted/60" />
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   )

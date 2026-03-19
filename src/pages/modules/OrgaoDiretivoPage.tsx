@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PageHeader } from '@/components/PageHeader'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import {
   Table,
   TableBody,
@@ -53,64 +53,81 @@ export default function OrgaoDiretivoPage() {
     <div className="space-y-6">
       <PageHeader
         title="2. Órgão Diretivo"
-        description="Registro dos diretores e alta liderança da organização."
+        description="Registro estruturado dos membros da alta direção responsáveis pela governança."
         breadcrumbs={[{ label: 'Início', path: '/' }, { label: 'Módulo 2' }]}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {canEdit && (
-          <Card className="lg:col-span-1 border-t-4 border-t-primary shadow-sm h-fit">
-            <CardHeader>
-              <CardTitle className="text-lg">Novo Integrante</CardTitle>
+          <Card className="lg:col-span-1 h-fit">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-base">Incluir Novo Membro</CardTitle>
+              <CardDescription>Adicione diretores ao escopo da ISO.</CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleAddMember} className="space-y-4">
+              <form onSubmit={handleAddMember} className="space-y-5">
                 <div className="space-y-2">
-                  <Label>Nome Completo</Label>
-                  <Input value={newName} onChange={(e) => setNewName(e.target.value)} required />
+                  <Label className="text-xs text-muted-foreground uppercase tracking-wider">
+                    Nome Completo
+                  </Label>
+                  <Input
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    required
+                    placeholder="Ex: João Silva"
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label>Cargo / Função</Label>
-                  <Input value={newRole} onChange={(e) => setNewRole(e.target.value)} required />
+                  <Label className="text-xs text-muted-foreground uppercase tracking-wider">
+                    Cargo / Função
+                  </Label>
+                  <Input
+                    value={newRole}
+                    onChange={(e) => setNewRole(e.target.value)}
+                    required
+                    placeholder="Ex: Diretor de Risco"
+                  />
                 </div>
                 <Button type="submit" className="w-full">
-                  <Plus className="w-4 h-4 mr-2" /> Adicionar
+                  <Plus className="w-4 h-4 mr-2" /> Registrar Membro
                 </Button>
               </form>
             </CardContent>
           </Card>
         )}
 
-        <Card className={`${canEdit ? 'lg:col-span-2' : 'lg:col-span-3'} shadow-sm`}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-primary" /> Membros Registrados
+        <Card className={`${canEdit ? 'lg:col-span-2' : 'lg:col-span-3'}`}>
+          <CardHeader className="border-b border-border/40 pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Users className="w-5 h-5 text-primary" /> Liderança Registrada
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             {members.length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground">Nenhum membro registrado.</div>
+              <div className="p-12 text-center text-sm text-muted-foreground">
+                Nenhum membro registrado no sistema.
+              </div>
             ) : (
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Nome</TableHead>
-                    <TableHead>Cargo</TableHead>
+                  <TableRow className="bg-muted/20">
+                    <TableHead>Identificação do Membro</TableHead>
+                    <TableHead>Função Organizacional</TableHead>
                     {canEdit && <TableHead className="text-right">Ações</TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {members.map((m) => (
                     <TableRow key={m.id}>
-                      <TableCell className="font-medium">{m.name}</TableCell>
-                      <TableCell>{m.role}</TableCell>
+                      <TableCell className="font-medium text-foreground">{m.name}</TableCell>
+                      <TableCell className="text-muted-foreground">{m.role}</TableCell>
                       {canEdit && (
                         <TableCell className="text-right">
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => handleRemoveMember(m.id)}
-                            className="text-destructive hover:bg-destructive/10"
+                            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-8 w-8"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>

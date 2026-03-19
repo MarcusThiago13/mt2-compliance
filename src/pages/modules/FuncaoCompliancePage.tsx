@@ -26,13 +26,13 @@ export default function FuncaoCompliancePage() {
 
   const handleSaveOfficer = (e: React.FormEvent) => {
     e.preventDefault()
-    if (canEdit) toast({ title: 'Salvo com sucesso' })
+    if (canEdit) toast({ title: 'Alterações salvas com sucesso' })
   }
 
   const handleAddCommittee = (e: React.FormEvent) => {
     e.preventDefault()
     if (canEdit && newCommName) {
-      setCommittee([...committee, { id: Date.now(), name: newCommName, dept: 'Geral' }])
+      setCommittee([...committee, { id: Date.now(), name: newCommName, dept: 'Multidisciplinar' }])
       setNewCommName('')
     }
   }
@@ -41,21 +41,24 @@ export default function FuncaoCompliancePage() {
     <div className="space-y-6">
       <PageHeader
         title="3. Função de Compliance"
+        description="Definição da estrutura de autoridade, independência e acesso ao órgão diretivo."
         breadcrumbs={[{ label: 'Início', path: '/' }, { label: 'Módulo 3' }]}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="border-t-4 border-t-primary shadow-sm h-fit">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <UserCheck className="w-5 h-5 text-primary" /> Compliance Officer
+        <Card className="h-fit">
+          <CardHeader className="border-b border-border/40 pb-4 mb-4">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <UserCheck className="w-5 h-5 text-primary" /> Responsável Principal
             </CardTitle>
-            <CardDescription>Responsável principal pelo programa.</CardDescription>
+            <CardDescription>Compliance Officer designado (Item 5.3.2)</CardDescription>
           </CardHeader>
           <form onSubmit={handleSaveOfficer}>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-5">
               <div className="space-y-2">
-                <Label>Nome Completo</Label>
+                <Label className="text-xs text-muted-foreground uppercase tracking-wider">
+                  Nome Completo
+                </Label>
                 <Input
                   value={officer.name}
                   onChange={(e) => setOfficer({ ...officer, name: e.target.value })}
@@ -64,7 +67,9 @@ export default function FuncaoCompliancePage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>E-mail Corporativo</Label>
+                <Label className="text-xs text-muted-foreground uppercase tracking-wider">
+                  E-mail Corporativo
+                </Label>
                 <Input
                   type="email"
                   value={officer.email}
@@ -75,56 +80,63 @@ export default function FuncaoCompliancePage() {
               </div>
             </CardContent>
             {canEdit && (
-              <CardFooter className="bg-muted/20 border-t justify-end p-4">
+              <CardFooter className="bg-muted/20 border-t border-border/40 justify-end p-4 mt-4 rounded-b-xl">
                 <Button type="submit">
-                  <Save className="w-4 h-4 mr-2" /> Salvar
+                  <Save className="w-4 h-4 mr-2" /> Atualizar Responsável
                 </Button>
               </CardFooter>
             )}
           </form>
         </Card>
 
-        <Card className="shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-secondary" /> Comissão de Compliance
+        <Card>
+          <CardHeader className="border-b border-border/40 pb-4 mb-4">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Users className="w-5 h-5 text-primary" /> Comitê de Integridade
             </CardTitle>
+            <CardDescription>Grupo multidisciplinar de apoio consultivo.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {canEdit && (
-              <form onSubmit={handleAddCommittee} className="flex gap-2">
+              <form onSubmit={handleAddCommittee} className="flex gap-3">
                 <Input
                   value={newCommName}
                   onChange={(e) => setNewCommName(e.target.value)}
-                  placeholder="Nome do membro"
+                  placeholder="Nome do integrante"
+                  className="flex-1"
                 />
-                <Button type="submit" variant="secondary">
-                  <Plus className="w-4 h-4" />
+                <Button type="submit" variant="secondary" className="shrink-0">
+                  <Plus className="w-4 h-4 mr-2" /> Adicionar
                 </Button>
               </form>
             )}
-            <div className="space-y-2">
+            <div className="space-y-3">
               {committee.map((c) => (
                 <div
                   key={c.id}
-                  className="flex items-center justify-between p-3 bg-muted/30 rounded-md border"
+                  className="flex items-center justify-between p-3.5 bg-muted/30 rounded-lg border border-border/50 hover:bg-muted/50 transition-colors"
                 >
                   <div>
-                    <p className="font-medium text-sm">{c.name}</p>
-                    <p className="text-xs text-muted-foreground">{c.dept}</p>
+                    <p className="font-semibold text-sm text-foreground">{c.name}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{c.dept}</p>
                   </div>
                   {canEdit && (
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => setCommittee(committee.filter((m) => m.id !== c.id))}
-                      className="text-destructive"
+                      className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-8 w-8"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   )}
                 </div>
               ))}
+              {committee.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  Nenhum integrante associado ao comitê.
+                </p>
+              )}
             </div>
           </CardContent>
         </Card>
