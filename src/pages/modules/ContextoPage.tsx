@@ -1,200 +1,64 @@
 import { PageHeader } from '@/components/PageHeader'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from '@/components/ui/card'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Plus, Upload, Activity } from 'lucide-react'
 import useAuthStore from '@/stores/useAuthStore'
-import { MOCK_OBLIGATIONS, MOCK_RISKS, MOCK_AUDIT_LOGS } from '@/lib/mock'
+import Section41Context from './components/contexto/Section41Context'
+import Section42Parties from './components/contexto/Section42Parties'
+import Section43Scope from './components/contexto/Section43Scope'
+import Section44System from './components/contexto/Section44System'
+import Section45Obligations from './components/contexto/Section45Obligations'
+import Section46Risks from './components/contexto/Section46Risks'
 
 export default function ContextoPage() {
-  const { user, currentTenantId } = useAuthStore()
+  const { user } = useAuthStore()
   const canEdit = user?.role === 'SUPER_ADMIN' || user?.role === 'EDITOR'
-
-  const risks = MOCK_RISKS.filter((r) => r.tenantId === currentTenantId)
-  const obligations = MOCK_OBLIGATIONS.filter((o) => o.tenantId === currentTenantId)
-  const logs = MOCK_AUDIT_LOGS.filter((l) => l.tenantId === currentTenantId)
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="4. Contexto da Organização"
+        description="Alinhamento estrutural baseado na ISO 37301:2021 para gestão de compliance."
         breadcrumbs={[{ label: 'Início', path: '/' }, { label: 'ISO Módulo 4' }]}
       />
 
-      <Tabs defaultValue="risks" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-muted/50 p-1 rounded-lg h-auto">
-          <TabsTrigger value="risks" className="py-2">
-            Riscos (4.6)
+      <Tabs defaultValue="4.1" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 bg-muted/50 p-1 rounded-lg h-auto mb-2 shadow-sm">
+          <TabsTrigger value="4.1" className="py-2.5 text-xs lg:text-sm transition-all">
+            4.1 Contexto
           </TabsTrigger>
-          <TabsTrigger value="obligations" className="py-2">
-            Obrigações (4.5)
+          <TabsTrigger value="4.2" className="py-2.5 text-xs lg:text-sm transition-all">
+            4.2 Partes Int.
           </TabsTrigger>
-          <TabsTrigger value="contexto" className="py-2">
-            Contexto (4.1)
+          <TabsTrigger value="4.3" className="py-2.5 text-xs lg:text-sm transition-all">
+            4.3 Escopo
           </TabsTrigger>
-          <TabsTrigger value="sgc" className="py-2">
-            Auditoria (4.4)
+          <TabsTrigger value="4.4" className="py-2.5 text-xs lg:text-sm transition-all">
+            4.4 Sistema
+          </TabsTrigger>
+          <TabsTrigger value="4.5" className="py-2.5 text-xs lg:text-sm transition-all">
+            4.5 Obrigações
+          </TabsTrigger>
+          <TabsTrigger value="4.6" className="py-2.5 text-xs lg:text-sm transition-all">
+            4.6 Riscos
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="risks" className="mt-6 space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">Matriz de Riscos de Compliance</h3>
-            {canEdit && (
-              <Button size="sm">
-                <Plus className="w-4 h-4 mr-2" /> Novo Risco
-              </Button>
-            )}
-          </div>
-          <Card>
-            <CardContent className="p-0 overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Risco</TableHead>
-                    <TableHead>Responsável</TableHead>
-                    <TableHead>Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {risks.map((risk) => (
-                    <TableRow key={risk.id}>
-                      <TableCell className="font-medium">{risk.id}</TableCell>
-                      <TableCell>
-                        <div className="font-medium">{risk.name}</div>
-                      </TableCell>
-                      <TableCell>{risk.owner}</TableCell>
-                      <TableCell>
-                        <Badge variant={risk.status === 'Crítico' ? 'destructive' : 'default'}>
-                          {risk.status}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+        <TabsContent value="4.1" className="mt-4 outline-none">
+          <Section41Context canEdit={canEdit} />
         </TabsContent>
-
-        <TabsContent value="obligations" className="mt-6 space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">Obrigações de Compliance</h3>
-            {canEdit && (
-              <Button size="sm">
-                <Plus className="w-4 h-4 mr-2" /> Nova Obrigação
-              </Button>
-            )}
-          </div>
-          <Card>
-            <CardContent className="p-0 overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Documento</TableHead>
-                    <TableHead>Vencimento</TableHead>
-                    <TableHead>Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {obligations.map((ob) => (
-                    <TableRow key={ob.id}>
-                      <TableCell className="font-medium">{ob.name}</TableCell>
-                      <TableCell>{ob.date}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant="outline"
-                          className={
-                            ob.status === 'Vigente'
-                              ? 'text-success border-success'
-                              : 'text-destructive border-destructive'
-                          }
-                        >
-                          {ob.status}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+        <TabsContent value="4.2" className="mt-4 outline-none">
+          <Section42Parties canEdit={canEdit} />
         </TabsContent>
-
-        <TabsContent value="contexto" className="mt-6 space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Análise SWOT</CardTitle>
-            </CardHeader>
-            <CardContent className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Forças e Fraquezas</Label>
-                <Textarea disabled={!canEdit} />
-              </div>
-              <div className="space-y-2">
-                <Label>Oportunidades e Ameaças</Label>
-                <Textarea disabled={!canEdit} />
-              </div>
-            </CardContent>
-            {canEdit && (
-              <CardFooter className="justify-between border-t bg-muted/10 p-4">
-                <Button variant="outline" size="sm">
-                  <Upload className="w-4 h-4 mr-2" /> Anexar
-                </Button>
-                <Button size="sm">Salvar</Button>
-              </CardFooter>
-            )}
-          </Card>
+        <TabsContent value="4.3" className="mt-4 outline-none">
+          <Section43Scope canEdit={canEdit} />
         </TabsContent>
-
-        <TabsContent value="sgc" className="mt-6 space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Trilha de Auditoria do Tenant</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0 overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Data</TableHead>
-                    <TableHead>Usuário</TableHead>
-                    <TableHead>Ação</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {logs.map((log) => (
-                    <TableRow key={log.id} className="text-xs">
-                      <TableCell className="text-muted-foreground">{log.date}</TableCell>
-                      <TableCell className="font-medium">{log.user}</TableCell>
-                      <TableCell>
-                        {log.action} - {log.detail}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+        <TabsContent value="4.4" className="mt-4 outline-none">
+          <Section44System canEdit={canEdit} />
+        </TabsContent>
+        <TabsContent value="4.5" className="mt-4 outline-none">
+          <Section45Obligations canEdit={canEdit} />
+        </TabsContent>
+        <TabsContent value="4.6" className="mt-4 outline-none">
+          <Section46Risks canEdit={canEdit} />
         </TabsContent>
       </Tabs>
     </div>
