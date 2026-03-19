@@ -8,11 +8,9 @@ import Login from './pages/Login'
 import SuperAdminDashboard from './pages/SuperAdminDashboard'
 import Index from './pages/Index'
 import NotFound from './pages/NotFound'
+import PerfilOrganizacionalPage from './pages/PerfilOrganizacionalPage'
 
 // Modules
-import DadosOrganizacaoPage from './pages/modules/DadosOrganizacaoPage'
-import OrgaoDiretivoPage from './pages/modules/OrgaoDiretivoPage'
-import FuncaoCompliancePage from './pages/modules/FuncaoCompliancePage'
 import ContextoPage from './pages/modules/ContextoPage'
 import LiderancaPage from './pages/modules/LiderancaPage'
 import PlanejamentoPage from './pages/modules/PlanejamentoPage'
@@ -32,9 +30,7 @@ const App = () => (
           <Route path="/admin" element={<SuperAdminDashboard />} />
           <Route element={<Layout />}>
             <Route path="/" element={<Index />} />
-            <Route path="/modulo/1" element={<DadosOrganizacaoPage />} />
-            <Route path="/modulo/2" element={<OrgaoDiretivoPage />} />
-            <Route path="/modulo/3" element={<FuncaoCompliancePage />} />
+            <Route path="/perfil" element={<PerfilOrganizacionalPage />} />
             <Route path="/modulo/4" element={<ContextoPage />} />
             <Route path="/modulo/5" element={<LiderancaPage />} />
             <Route path="/modulo/6" element={<PlanejamentoPage />} />

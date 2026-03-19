@@ -7,7 +7,7 @@ export const MOCK_USERS = [
   {
     id: 'u1',
     name: 'Admin Plataforma',
-    email: 'admin@mt3.com',
+    email: 'admin@mt2.com',
     password: '123',
     role: 'SUPER_ADMIN',
   },

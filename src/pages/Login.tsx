@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast'
 import { ShieldCheck, ArrowRight } from 'lucide-react'
 
 export default function Login() {
-  const [email, setEmail] = useState('admin@mt3.com')
+  const [email, setEmail] = useState('admin@mt2.com')
   const [password, setPassword] = useState('123')
   const { login } = useAuthStore()
   const navigate = useNavigate()
@@ -44,7 +44,7 @@ export default function Login() {
             <div className="bg-primary p-2.5 rounded-xl">
               <ShieldCheck className="w-8 h-8 text-primary-foreground" />
             </div>
-            <h1 className="text-3xl font-bold tracking-tight text-foreground">mt3 compliance</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">mt2 Compliance</h1>
           </div>
           <div className="space-y-4 text-muted-foreground max-w-sm">
             <p className="text-lg leading-relaxed">
@@ -126,7 +126,7 @@ export default function Login() {
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <span className="block font-medium">Super Admin</span>
-                    <span className="text-[10px]">admin@mt3.com</span>
+                    <span className="text-[10px]">admin@mt2.com</span>
                   </div>
                   <div>
                     <span className="block font-medium">Gestor</span>

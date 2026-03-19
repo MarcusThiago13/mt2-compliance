@@ -24,12 +24,14 @@ import { Lock, Send, ShieldAlert, FileSearch } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import useAuthStore from '@/stores/useAuthStore'
 import { MOCK_INVESTIGATIONS } from '@/lib/mock'
+import { ComplianceChecklistItem } from '@/components/ComplianceChecklist'
 
 export default function OperacaoPage() {
   const { user, currentTenantId } = useAuthStore()
   const { toast } = useToast()
 
-  const canViewInvestigations = user?.role === 'SUPER_ADMIN' || user?.role === 'EDITOR'
+  const canEdit = user?.role === 'SUPER_ADMIN' || user?.role === 'EDITOR'
+  const canViewInvestigations = canEdit
   const investigations = MOCK_INVESTIGATIONS.filter((i) => i.tenantId === currentTenantId)
 
   const handleDenunciaSubmit = (e: React.FormEvent) => {
@@ -63,7 +65,7 @@ export default function OperacaoPage() {
           )}
         </TabsList>
 
-        <TabsContent value="denuncias" className="max-w-3xl mx-auto mt-2">
+        <TabsContent value="denuncias" className="max-w-3xl mx-auto mt-2 space-y-6">
           <Card>
             <CardHeader className="bg-primary/5 border-b border-border/40 pb-6 rounded-t-xl">
               <CardTitle className="text-primary flex items-center gap-2">
@@ -94,10 +96,26 @@ export default function OperacaoPage() {
               </CardFooter>
             </form>
           </Card>
+
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold mb-2">Checklist de Auditoria (Item 8.3)</h4>
+            <ComplianceChecklistItem
+              clause="8.3.1"
+              title="Canal de Relatos Eficaz"
+              description="A organização estabeleceu e implementou canais visíveis e acessíveis para relatos de preocupações em sigilo?"
+              canEdit={canEdit}
+            />
+            <ComplianceChecklistItem
+              clause="8.3.2"
+              title="Proteção contra Retaliação"
+              description="A organização assegura que o pessoal pode relatar de boa-fé sem medo de retaliação?"
+              canEdit={canEdit}
+            />
+          </div>
         </TabsContent>
 
         {canViewInvestigations && (
-          <TabsContent value="investigacoes" className="mt-2">
+          <TabsContent value="investigacoes" className="mt-2 space-y-6">
             <Card>
               <CardHeader className="border-b border-border/40 pb-4 flex flex-row items-center justify-between">
                 <div>
@@ -141,6 +159,16 @@ export default function OperacaoPage() {
                 </Table>
               </CardContent>
             </Card>
+
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold mb-2">Checklist de Auditoria (Item 8.4)</h4>
+              <ComplianceChecklistItem
+                clause="8.4.1"
+                title="Processos de Investigação"
+                description="Processos estabelecidos para avaliar, investigar e fechar relatos de não conformidade de forma independente e livre de conflitos?"
+                canEdit={canEdit}
+              />
+            </div>
           </TabsContent>
         )}
       </Tabs>

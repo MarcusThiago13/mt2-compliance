@@ -13,9 +13,6 @@ import {
 import { Link, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard,
-  Building2,
-  Users,
-  UserCog,
   Globe,
   Award,
   Target,
@@ -24,15 +21,14 @@ import {
   Activity,
   TrendingUp,
   ShieldCheck,
+  Building,
 } from 'lucide-react'
 import useAuthStore from '@/stores/useAuthStore'
 import { MOCK_TENANTS } from '@/lib/mock'
 
 const navItems = [
   { title: 'Dashboard Executivo', icon: LayoutDashboard, url: '/' },
-  { title: '1. Dados da Organização', icon: Building2, url: '/modulo/1' },
-  { title: '2. Dados do Órgão Diretivo', icon: Users, url: '/modulo/2' },
-  { title: '3. Função de Compliance', icon: UserCog, url: '/modulo/3' },
+  { title: 'Perfil da Organização', icon: Building, url: '/perfil' },
   { title: '4. Contexto da Organização', icon: Globe, url: '/modulo/4' },
   { title: '5. Liderança', icon: Award, url: '/modulo/5' },
   { title: '6. Planejamento', icon: Target, url: '/modulo/6' },
@@ -56,7 +52,7 @@ export function AppSidebar() {
           </div>
           <div className="flex flex-col truncate">
             <span className="font-semibold text-sm leading-tight tracking-tight text-sidebar-foreground truncate">
-              {currentTenant?.name || 'mt3 compliance'}
+              {currentTenant?.name || 'mt2 Compliance'}
             </span>
             <span className="text-[11px] text-sidebar-foreground/60 font-medium uppercase tracking-wider mt-0.5">
               ISO 37301
@@ -101,7 +97,7 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter className="p-4 text-xs text-sidebar-foreground/40 bg-sidebar">
         <div className="group-data-[collapsible=icon]:hidden px-2">
-          <p>© 2024 mt3 compliance</p>
+          <p>© 2024 mt2 Compliance</p>
         </div>
       </SidebarFooter>
     </Sidebar>
